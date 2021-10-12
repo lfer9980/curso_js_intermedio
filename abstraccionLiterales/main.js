@@ -43,7 +43,7 @@ function deepCopy(subject) {
 }
 
 
-//objeto estudio!
+/* //objeto estudio!
 const studentBase = {
 	name: undefined,
 	email: undefined,
@@ -56,18 +56,42 @@ const studentBase = {
 		facebook: undefined,
 	},
 }
-
-const juan = deepCopy(studentBase)
-
-/* Object.defineProperty(juan, "name", {
-	value: "JuanDC",
-	configurable: false,
-}) */
-
-//con seal, evitamos que se borren propiedades del objeto
-Object.seal(juan)
-Object.isSealed(juan)
-juan.name = "Juanito"
+ */
 
 
+//funcion aux para arrojar error cuando no se envian parametros
+function requiredParam(param) {
+	throw new Error(`${param} es obligatorio`);
+}
 
+//a los parametros requeridos, los igualamos a la funcion requiredParam
+function createStudent({
+	name = requiredParam("name"),
+	email = requiredParam("email"),
+	age,
+	twitter,
+	instagram,
+	facebook,
+	approvedCourses = [],
+	learningPaths = [],
+} = {}) {
+	return {
+		name,
+		age,
+		email,
+		approvedCourses,
+		learningPaths,
+		socialMedia: {
+			twitter,
+			instagram,
+			facebook,
+		},
+	}
+}
+
+const juan = createStudent({
+
+	age: 19,
+	email: "juanito@frijolito.com",
+	twitter: "fjuandc",
+})
