@@ -64,7 +64,6 @@ function LearningPath({
 }
 
 
-
 //a los parametros requeridos, los igualamos a la funcion requiredParam
 function Student({
 	name = requiredParam("name"),
@@ -87,16 +86,31 @@ function Student({
 		facebook,
 	}
 
-	if (isArray(learningPaths)) {
-		this.learningPaths = []
+	const private = {
+		"_learningPaths": []
+	}
 
-		for (lpIndex in learningPaths) {
-			if (learningPaths[lpIndex] instanceof LearningPath) {
-				this.learningPaths.push(learningPaths[lpIndex])
+	//encapsulando nuestros learning Paths y definiendo getters y setter
+	Object.defineProperty(this, "learningPaths", {
+		get() {
+			return private["_learningPaths"]
+		},
+		set(newLp) {
+			if (newLp instanceof LearningPath) {
+				private["_learningPaths"].push(newLp)
+			} else {
+				console.warn("Alguno de los learningPaths no es una instancia de LearningPath")
 			}
-		}
+		},
+		configurable: false,
+	})
+
+	//este for agrega los learningPaths iniciales solamente
+	for (lpIndex in learningPaths) {
+		this.learningPaths = learningPaths[lpIndex]
 	}
 }
+
 
 const escuelaWeb = new LearningPath({name: "Escuela de desarrollo web", courses: []})
 
