@@ -50,39 +50,23 @@ function requiredParam(param) {
 }
 
 
-function createLearningPath({
+function LearningPath({
 	name = requiredParam("name"),
 	courses = [],
 }) {
+	this.name = name
+	this.courses = courses
+	
 	const private = {
 		"_name": name,
 		"_courses": courses,
 	}
-
-	const public = {
-		get name() {
-			return private["_name"]
-		},
-		set name(newName) {
-			if (newName.length != 0) {
-				private["_name"] = newName
-			} else {
-				console.warn("tu nombre debe tener al menos 1 caracter")
-			}
-		},
-
-		get courses() {
-			return private["_courses"]
-		},
-	}
-
-	return public
 }
 
 
 
 //a los parametros requeridos, los igualamos a la funcion requiredParam
-function createStudent({
+function Student({
 	name = requiredParam("name"),
 	email = requiredParam("email"),
 	age,
@@ -92,64 +76,38 @@ function createStudent({
 	approvedCourses = [],
 	learningPaths = [],
 } = {}) {
-	const private = {
-		"_name": name,
-		"_learningPaths": learningPaths,
-	}
-	const public = {
-		age,
-		email,
-		approvedCourses,
-		socialMedia: {
-			twitter,
-			instagram,
-			facebook,
-		},
-		get name() {
-			return private["_name"]
-		},
-		set name(newName) {
-			if (newName.length != 0) {
-				private["_name"] = newName
-			} else {
-				console.warn("tu nombre debe tener al menos 1 caracter")
-			}
-		},
 
-		get learningPaths() {
-			return private["_learningPaths"]
-		},
-		set learningPaths(newLearningPath) {
-
-			if (!newLearningPath.name) {
-				console.warn("tu learning Path no tiene nombre")
-				return;
-			}
-
-			if (!newLearningPath.courses) {
-				console.warn("tu learning Path no tiene cursos")
-				return;
-			}
-
-			if (!isArray(newLearningPath.courses)) {
-				console.warn("tu learning Path no es un array de cursos")
-				return;
-			}
-
-			private["_learningPaths"].push(newLearningPath)
-
-		},
+	this.name = name
+	this.email = email
+	this.age = age
+	this.approvedCourses = approvedCourses
+	this.socialMedia = {
+		twitter,
+		instagram,
+		facebook,
 	}
 
-	return public
+	if (isArray(learningPaths)) {
+		this.learningPaths = []
+
+		for (lpIndex in learningPaths) {
+			if (learningPaths[lpIndex] instanceof LearningPath) {
+				this.learningPaths.push(learningPaths[lpIndex])
+			}
+		}
+	}
 }
 
-const juan = createStudent({
+const escuelaWeb = new LearningPath({name: "Escuela de desarrollo web", courses: []})
+
+const juan = new Student({
 	name: "juanito",
 	age: 19,
 	email: "juanito@frijolito.com",
 	twitter: "fjuandc",
+	learningPaths: [
+		escuelaWeb,
+		{name: "Escuela del impostor", courses: []}
+	]
 })
 
-
-juan.learningPaths = "Nueva ruta de aprendizaje"
